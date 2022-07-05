@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    canvas{
+      background-color: #DDD;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="500" height="400"></canvas>
+</body>
+<script>
+  /* 线条相关
+   * 1.线条有默认高度和颜色：1px 黑色
+   * 1.1 显示为2px 非纯黑色原因：线条中线与两个像素中线对齐，各占两个像素的一半，此时会自动填充剩余部分
+   * 1.2 可以通过设置50.5的形式解决
+   * 2. 线条相关属性及方法
+   * moveTo(x,y): 线条的起点
+   * lineTo(x,y): 线条经过的点
+   * storke(): 将线条所有点连接起来
+   * lineWidth: 线条宽度
+   * storkeStyle: 线条颜色
+   * lineCap: 线末端类型：butt-默认，round-圆形,square-方形
+   * beginPath(): 重新开启一个路径（绘制多条线时，为避免样式的相互影响，需要设置beginPath()并且设置独有的样式）
+   * closePath(): 通过lineTo()不能很好的闭合线条拐点处有问题，
+   * lineJoin： 设置线条相交拐点处的样式miter-默认，round-圆形，bevel-切片
+   * fill(): 将路径框起来的区域填满
+   * fillStyle：填充的颜色设置
+   * setLineDash([1,2,3]): 设置虚线参数是一个数组，表示第一段，第二段，第三段宽度，
+   * lineDashOffset: 虚线偏移量
+   * getLineDash():获取不重复的段的宽度
+   * rect(x,y,w,h):绘制矩形
+   * strokeRect(x,y,w,h): 省却了stroke()
+   * fillRect(x,y,w,h):同上
+   * clearRect(x,y,w,h): 区域内覆盖透明色，清空画板
+   * createLinearGradient(x1,y1,x2,y2): 线性渐变
+   *      let linerGradient = oCtx.createLinearGradient(x1,y1,x2,y2)
+   *      linerGradient.addColorStop(0,'red')
+   *      linerGradient.addColorStop(1,'blue')
+   *      oCtx.fillStyle = linerGradient
+   *      从0到1红色向蓝色渐变
+   * arc(x,y,radius,startAngle,endAngle,blooen): 绘制圆弧
+   *      x: 原点x轴坐标
+   *      y; 原点y轴坐标
+   *      radius:半径
+   *      startAngle: 开始弧度
+   *      endAngle：结束弧度
+   *      blooen：顺时针false,逆时针true
+   * strokeText(text,x,y): 绘制文字，以文字的左下角为坐标点（空心）
+   * fillText():绘制文字，以文字的左下角为坐标点（实心）
+   * font:文字的大小，样式
+   * textBaseline:设置文字纵向对齐方式，top bottom middle;
+   * textAlign:以X作为参考点水平对齐，start end center
+   * drawImage():
+   *      三个参数时表示，图片，位置x,y
+   *      5个参数时表示，图片，位置x,y，等比拉伸w,h
+   *      9个参数时表示：图片，图片中的定位x,y，截取的区域大小w,h，位置x,y，等比拉伸w,h
+   * translate():平移
+   * scale():缩放
+   * rotate()：旋转
+   * isPointerInPath(x,y): 判断是否进行了交互
+   *  
+   * 注意点；
+   * 1、填充规则非0环绕规则，遇到顺时针+,逆时针-1，非0时填充
+   * 2、textBaseline：文字对齐方式以设置的Y轴作为参考点
+   * 3、形变属性改变的是整个坐标系而不是图形
+   * 4、isPointerInPath只能监听新路径上
+  */
+  let oCanvas = document.querySelector("canvas")
+
+  let oCtx = oCanvas.getContext('2d')
+
+  // oCtx.moveTo(15,40)
+
+  // oCtx.lineTo(200,40)
+
+  // oCtx.lineWidth = 30
+
+  // oCtx.strokeStyle = "#d21"
+
+  // oCtx.lineCap = "round"
+
+  // oCtx.stroke()
+
+  // // 绘制多条线
+  // oCtx.beginPath(); // 必须开启一个新路径，否则此线条的样式将继承上述样式
+
+  // // 必须设置单独的样式，否则依然会继承上面线条的样式
+  // oCtx.lineWidth = 40
+
+  // oCtx.strokeStyle = '#888'
+
+  // oCtx.moveTo(20,90)
+
+  // oCtx.lineTo(200,90)
+  // oCtx.lineCap = "square"
+  // oCtx.stroke()
+
+  // 使用closePath闭合三角形
+  // oCtx.moveTo(20,20)
+  // oCtx.lineTo(50,20)
+  // oCtx.lineTo(50,50)
+  // oCtx.lineWidth = 2
+  // oCtx.strokeStyle = "red"
+  // oCtx.closePath()
+  // oCtx.lineJoin = "round"
+  // oCtx.stroke()
+
+
+  // // 填充 fill()
+  // oCtx.moveTo(20,20)
+  // oCtx.lineTo(250,20)
+  // oCtx.lineTo(250,140)
+  // oCtx.lineTo(20,140)
+  // oCtx.closePath()
+  // oCtx.fillStyle = "red"
+  // oCtx.fill()
+
+  // // 在不是使用beginPath时，
+  // oCtx.moveTo(150,30)
+  // oCtx.lineTo(30,30)
+  // oCtx.lineTo(30,100)
+  // oCtx.lineTo(150,100)
+  // oCtx.fillStyle = "#288"
+  // oCtx.fill()
+
+  // 虚线 setLineDash
+  // oCtx.moveTo(30,30)
+  // oCtx.lineTo(200,30)
+  // oCtx.lineWidth = 4
+  // oCtx.strokeStyle = "red"
+  // oCtx.setLineDash([5,10])
+  // console.log(oCtx.getLineDash())
+  // oCtx.lineDashOffset = 10
+  // oCtx.stroke()
+
+  // 绘制矩形 200*200
+  // oCtx.moveTo(100,100)
+  // oCtx.lineTo(300,100)
+  // oCtx.lineWidth = 200
+  // oCtx.stroke()
+  // oCtx.rect(100,100,200,200)
+  // // oCtx.fill()
+  // oCtx.stroke()
+
+  // 渐变
+  let linerGradient = oCtx.createLinearGradient(100,100,400,100)
+  linerGradient.addColorStop(0,'red')
+  linerGradient.addColorStop(1,'blue')
+  oCtx.fillStyle = linerGradient
+  oCtx.fillRect(100,100,300,300)
+  // oCtx.arc(100,100,100,0,Math.PI,true)
+  // oCtx.stroke()
+
+  // oCtx.arc(100,100,100,0,Math.PI/4,true)
+  // oCtx.stroke()
+  // let centerX = oCtx.canvas.width/2
+  // let centerY = oCtx.canvas.height/2
+  // // 横向
+  // oCtx.moveTo(0,centerY)
+  // oCtx.lineTo(oCtx.canvas.width,centerY)
+
+  // // 纵向
+  // oCtx.moveTo(centerX,0)
+  // oCtx.lineTo(centerX,oCtx.canvas.height)
+
+  // oCtx.stroke()
+
+  // oCtx.beginPath()
+  // oCtx.font = "24px STheiti, SimHei"
+  // oCtx.textAlign = "center"
+  // oCtx.textBaseline = "middle"
+  // oCtx.fillText('这是一段文本',centerX,centerY)
+ 
+
+</script>
+</html>

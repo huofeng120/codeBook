@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>24-JSONP练习</title>
+    <script src="js/jquery-1.12.4.js"></script>
+    <script src="./JSONP.js"></script>
+    <script src="./myJsonp.js"></script>
+</head>
+<body>
+<input type="text" placeholder="请输入要搜索的内容">
+<ul></ul>
+<script>
+    
+    let $ul = $("ul");
+    $("input").on("input", function () {
+        
+        // console.log(this.value);
+        // $.ajax({
+        //     url: "https://www.baidu.com/sugrec?prod=pc&from=pc_web&wd=" + this.value,
+        //     data:{
+        //         "teacher": "lnj",
+        //         "age": 34
+        //     },
+        //     dataType: "jsonp", // 告诉jQuery需要请求跨域的数据
+        //     jsonp: "cb",  // 告诉jQuery服务器在获取回调函数名称的时候需要用什么key来获取
+        //     success: function (msg) {
+        //         // console.log(msg);
+        //         createItems(msg.g);
+        //     }
+        // });
+        new MyJsonp({
+            url: "http://127.0.0.1/jsonp",
+            data:{
+                "teacher": "lnj",
+                "age": 34
+            },
+            // dataType: "jsonp", // 告诉jQuery需要请求跨域的数据
+            jsonp: "cb",  // 告诉jQuery服务器在获取回调函数名称的时候需要用什么key来获取
+            success: function (msg) {
+                console.log(msg);
+                // createItems(msg.g);
+            }
+        })
+    });
+    function createItems(list) {
+        $("ul>li").remove();
+        for(let i = 0; i < list.length; i++){
+            let $li = $("<li>"+list[i].q+"</li>");
+            $ul.append($li);
+        }
+    }
+</script>
+</body>
+</html>
